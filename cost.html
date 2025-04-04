@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>獲利計算器</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    input[type="text"], input[type="number"] {
+      width: 60px;
+    }
+    .inline {
+      display: inline-block;
+      margin-right: 4px;
+    }
+    .result {
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    button {
+      display: block;
+      margin: 1rem auto;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>獲利計算器</h1>
+    <form id="profitForm">
+      <table>
+        <thead>
+          <tr>
+            <th>商品</th>
+            <th>成本</th>
+            <th>售價 (每份)</th>
+            <th>銷售數量</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>薯條</td>
+            <td>
+              <span class="inline"><input type="number" name="costQty" value="30" required /> 份</span>
+              <span class="inline"><input type="number" name="costTotal" step="0.1" value="325" required /> 元</span>
+            </td>
+            <td><input type="number" name="price" step="0.1" value="30" required /></td>
+            <td><input type="number" name="qty" value="70" required /></td>
+          </tr>
+          <tr>
+            <td>起司條</td>
+            <td>
+              <span class="inline"><input type="number" name="costQty" value="15" required /> 份</span>
+              <span class="inline"><input type="number" name="costTotal" step="0.1" value="600" required /> 元</span>
+            </td>
+            <td><input type="number" name="price" step="0.1" value="40" required /></td>
+            <td><input type="number" name="qty" value="40" required /></td>
+          </tr>
+          <tr>
+            <td>炸香腸</td>
+            <td>
+              <span class="inline"><input type="number" name="costQty" value="8" required /> 份</span>
+              <span class="inline"><input type="number" name="costTotal" step="0.1" value="140" required /> 元</span>
+            </td>
+            <td><input type="number" name="price" step="0.1" value="30" required /></td>
+            <td><input type="number" name="qty" value="60" required /></td>
+          </tr>
+          <tr>
+            <td>冬瓜茶</td>
+            <td>
+              <span class="inline"><input type="number" name="costQty" value="7" required /> 份</span>
+              <span class="inline"><input type="number" name="costTotal" step="0.1" value="100" required /> 元</span>
+            </td>
+            <td><input type="number" name="price" step="0.1" value="25" required /></td>
+            <td><input type="number" name="qty" value="50" required /></td>
+          </tr>
+          <tr>
+            <td>乾冰汽水</td>
+            <td>
+              <span class="inline"><input type="number" name="costQty" value="200" required /> 份</span>
+              <span class="inline"><input type="number" name="costTotal" step="0.1" value="2820" required /> 元</span>
+            </td>
+            <td><input type="number" name="price" step="0.1" value="35" required /></td>
+            <td><input type="number" name="qty" value="50" required /></td>
+          </tr>
+        </tbody>
+      </table>
+      <label for="others">其他雜項支出：</label>
+      <input type="number" id="others" step="0.1" value="2500" /> 元
+      <button type="button" onclick="calculateProfit()">計算獲利</button>
+    </form>
+    <div class="result" id="result">請輸入資料後按下「計算獲利」</div>
+  </div>
+
+  <script>
+    function calculateProfit() {
+      const form = document.getElementById('profitForm');
+      const costQtys = form.querySelectorAll('input[name="costQty"]');
+      const costTotals = form.querySelectorAll('input[name="costTotal"]');
+      const prices = form.querySelectorAll('input[name="price"]');
+      const qtys = form.querySelectorAll('input[name="qty"]');
+      const others = parseFloat(document.getElementById('others').value) || 0;
+
+      let totalCost = 0;
+      let totalRevenue = 0;
+
+      for (let i = 0; i < prices.length; i++) {
+        const costQty = parseFloat(costQtys[i].value);
+        const costTotal = parseFloat(costTotals[i].value);
+        const price = parseFloat(prices[i].value);
+        const qty = parseInt(qtys[i].value);
+
+        const costPerItem = (costQty && costTotal) ? costTotal / costQty : 0;
+        totalCost += costPerItem * qty;
+        totalRevenue += price * qty;
+      }
+
+      const profit = totalRevenue - totalCost - others;
+      document.getElementById('result').innerText = `總獲利：${profit.toFixed(2)} 元`;
+    }
+
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', calculateProfit);
+    });
+  </script>
+</body>
+</html>
